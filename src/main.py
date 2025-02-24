@@ -7,8 +7,7 @@ from viam.media.video import ViamImage
 from viam.module.module import Module
 from viam.proto.app.robot import ComponentConfig
 from viam.proto.common import PointCloudObject, ResourceName
-from viam.proto.service.vision import (Classification, Detection,
-                                       GetPropertiesResponse)
+from viam.proto.service.vision import Classification, Detection, GetPropertiesResponse
 from viam.resource.base import ResourceBase
 from viam.resource.easy_resource import EasyResource
 from viam.resource.types import Model, ModelFamily
@@ -70,7 +69,7 @@ class BlurryDetector(Vision, EasyResource):
         return_object_point_clouds: bool = False,
         *,
         extra: Optional[Mapping[str, ValueTypes]] = None,
-        timeout: Optional[float] = None
+        timeout: Optional[float] = None,
     ) -> CaptureAllResult:
         raise NotImplementedError()
 
@@ -79,7 +78,7 @@ class BlurryDetector(Vision, EasyResource):
         camera_name: str,
         *,
         extra: Optional[Mapping[str, ValueTypes]] = None,
-        timeout: Optional[float] = None
+        timeout: Optional[float] = None,
     ) -> List[Detection]:
         raise NotImplementedError()
 
@@ -88,7 +87,7 @@ class BlurryDetector(Vision, EasyResource):
         image: ViamImage,
         *,
         extra: Optional[Mapping[str, ValueTypes]] = None,
-        timeout: Optional[float] = None
+        timeout: Optional[float] = None,
     ) -> List[Detection]:
         raise NotImplementedError()
 
@@ -98,7 +97,7 @@ class BlurryDetector(Vision, EasyResource):
         count: int,
         *,
         extra: Optional[Mapping[str, ValueTypes]] = None,
-        timeout: Optional[float] = None
+        timeout: Optional[float] = None,
     ) -> List[Classification]:
         raise NotImplementedError()
 
@@ -108,7 +107,7 @@ class BlurryDetector(Vision, EasyResource):
         count: int,
         *,
         extra: Optional[Mapping[str, ValueTypes]] = None,
-        timeout: Optional[float] = None
+        timeout: Optional[float] = None,
     ) -> List[Classification]:
         raise NotImplementedError()
 
@@ -117,7 +116,7 @@ class BlurryDetector(Vision, EasyResource):
         camera_name: str,
         *,
         extra: Optional[Mapping[str, ValueTypes]] = None,
-        timeout: Optional[float] = None
+        timeout: Optional[float] = None,
     ) -> List[PointCloudObject]:
         raise NotImplementedError()
 
@@ -125,11 +124,10 @@ class BlurryDetector(Vision, EasyResource):
         self,
         *,
         extra: Optional[Mapping[str, ValueTypes]] = None,
-        timeout: Optional[float] = None
+        timeout: Optional[float] = None,
     ) -> Vision.Properties:
         raise NotImplementedError()
 
 
 if __name__ == "__main__":
     asyncio.run(Module.run_from_registry())
-
