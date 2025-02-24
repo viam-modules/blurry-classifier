@@ -1,4 +1,3 @@
-
+pyinstaller==6.12.0
+typing-extensions==4.12.2
 viam-sdk==0.41.0
-
-typing-extensions
