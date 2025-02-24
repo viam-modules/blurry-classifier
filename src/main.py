@@ -22,7 +22,9 @@ class BlurryDetector(Vision, EasyResource):
 
     @classmethod
     def new(
-        cls, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]
+        cls,
+        config: ComponentConfig,
+        dependencies: Mapping[ResourceName, ResourceBase],
     ) -> Self:
         """
         This method creates a new instance of this Vision service.  The default
@@ -55,8 +57,10 @@ class BlurryDetector(Vision, EasyResource):
         return []
 
     def reconfigure(
-        self, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]
-    ):
+        self,
+        config: ComponentConfig,
+        dependencies: Mapping[ResourceName, ResourceBase],
+    ) -> None:
         """
         This method allows you to dynamically update your service when it
         receives a new `config` object.
