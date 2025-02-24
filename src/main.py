@@ -24,12 +24,15 @@ class BlurryDetector(Vision, EasyResource):
     def new(
         cls, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]
     ) -> Self:
-        """This method creates a new instance of this Vision service.
-        The default implementation sets the name from the `config` parameter and then calls `reconfigure`.
+        """
+        This method creates a new instance of this Vision service.  The default
+        implementation sets the name from the `config` parameter and then calls
+        `reconfigure`.
 
         Args:
             config (ComponentConfig): The configuration for this resource
-            dependencies (Mapping[ResourceName, ResourceBase]): The dependencies (both implicit and explicit)
+            dependencies (Mapping[ResourceName, ResourceBase]): The
+                dependencies (both implicit and explicit)
 
         Returns:
             Self: The resource
@@ -38,8 +41,10 @@ class BlurryDetector(Vision, EasyResource):
 
     @classmethod
     def validate_config(cls, config: ComponentConfig) -> Sequence[str]:
-        """This method allows you to validate the configuration object received from the machine,
-        as well as to return any implicit dependencies based on that `config`.
+        """
+        This method allows you to validate the configuration object received
+        from the machine, as well as to return any implicit dependencies based
+        on that `config`.
 
         Args:
             config (ComponentConfig): The configuration for this resource
@@ -52,11 +57,14 @@ class BlurryDetector(Vision, EasyResource):
     def reconfigure(
         self, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]
     ):
-        """This method allows you to dynamically update your service when it receives a new `config` object.
+        """
+        This method allows you to dynamically update your service when it
+        receives a new `config` object.
 
         Args:
             config (ComponentConfig): The new configuration
-            dependencies (Mapping[ResourceName, ResourceBase]): Any dependencies (both implicit and explicit)
+            dependencies (Mapping[ResourceName, ResourceBase]): Any
+                dependencies (both implicit and explicit)
         """
         return super().reconfigure(config, dependencies)
 
