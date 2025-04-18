@@ -10,3 +10,8 @@ setup: .installed
 .PHONY: dist/main
 dist/archive.tar.gz: .installed
 	./build.sh
+
+test:
+	PYTHONPATH=./src pytest
+lint:
+	pylint --disable=C0301,C0114,W0401,C0115,R0913,R0917,E1101,W0614 src/
