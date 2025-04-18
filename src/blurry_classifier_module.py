@@ -11,7 +11,7 @@ from viam.proto.service.vision import Classification, Detection
 from viam.resource.base import ResourceBase
 from viam.resource.easy_resource import EasyResource
 from viam.resource.types import Model, ModelFamily
-from viam.services.vision import *
+from viam.services.vision import Vision, CaptureAllResult
 from viam.utils import ValueTypes
 
 import cv2 as cv
@@ -20,6 +20,16 @@ from src.utils import decode_image
 
 
 class BlurryDetector(Vision, EasyResource):
+    """
+    BlurryDetector implements a vision service that only supports classifications.
+
+    It inherits from the built-in resource subtype Vision and conforms to the
+    ``Reconfigurable`` protocol, which signifies that this component can be
+    reconfigured. Additionally, it specifies a constructor function
+    ``BlurryDetector.new`` which confirms to the
+    ``resource.types.ResourceCreator`` type required for all models.
+    """
+
     MODEL: ClassVar[Model] = Model(
         ModelFamily("viam", "blurry-detector"), "blurry-detector"
     )
@@ -92,6 +102,7 @@ class BlurryDetector(Vision, EasyResource):
         if "blurry_threshold" in config.attributes.fields:
             self.blurry_threshold = config.attributes.fields["blurry_threshold"].number_value
 
+    # pylint: disable=too-many-arguments,too-many-positional-arguments
     async def capture_all_from_camera(
         self,
         camera_name: str,
@@ -105,7 +116,11 @@ class BlurryDetector(Vision, EasyResource):
     ) -> CaptureAllResult:
         if camera_name not in (self.camera_name, ""):
             raise ValueError(
-                f"Camera name {camera_name} does not match the camera name {self.camera_name} in the config."
+                "Camera name ",
+                {camera_name},
+                "does not match the camera name ",
+                {self.camera_name},
+                "in the config."
             )
         im = await self.camera.get_image(mime_type=CameraMimeType.JPEG)
         classifications = None
@@ -144,7 +159,11 @@ class BlurryDetector(Vision, EasyResource):
     ) -> List[Classification]:
         if camera_name not in (self.camera_name, ""):
             raise ValueError(
-                f"Camera name {camera_name} does not match the camera name {self.camera_name} in the config."
+                "Camera name ",
+                {camera_name},
+                "does not match the camera name ",
+                {self.camera_name},
+                "in the config."
             )
         im = await self.camera.get_image(mime_type=CameraMimeType.JPEG)
         return self.get_classifications(im, 1, extra=extra, timeout=timeout)
