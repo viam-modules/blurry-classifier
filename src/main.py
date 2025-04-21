@@ -4,7 +4,7 @@ import asyncio
 from viam.services.vision import Vision
 from viam.module.module import Module
 from viam.resource.registry import Registry, ResourceCreatorRegistration
-from src.blurry_classifier_module import BlurryDetector
+from src.blurry_classifier_module import BlurryClassifier
 
 
 async def main():
@@ -15,15 +15,15 @@ async def main():
     """
     Registry.register_resource_creator(
         Vision.API,
-        BlurryDetector.MODEL,
+        BlurryClassifier.MODEL,
         ResourceCreatorRegistration(
-            BlurryDetector.new,
-            BlurryDetector.validate_config,
+            BlurryClassifier.new,
+            BlurryClassifier.validate_config,
         ),
     )
     module = Module.from_args()
 
-    module.add_model_from_registry(Vision.API, BlurryDetector.MODEL)
+    module.add_model_from_registry(Vision.API, BlurryClassifier.MODEL)
     await module.start()
 
 

@@ -1,13 +1,13 @@
 {
   "$schema": "https://dl.viam.dev/module.schema.json",
-  "module_id": "viam:blurry-detector",
+  "module_id": "viam:blurry-classifier",
   "visibility": "public",
   "url": "",
-  "description": "Modular vision service: blurry-detector",
+  "description": "Modular vision service: blurry-classifier",
   "models": [
     {
       "api": "rdk:service:vision",
-      "model": "viam:blurry-detector:blurry-detector"
+      "model": "viam:blurry-classifier:blurry-classifier"
     }
   ],
   "entrypoint": "dist/main",

@@ -4,7 +4,7 @@ from typing import List, Dict
 
 from unittest.mock import patch
 
-from src.blurry_classifier_module import BlurryDetector
+from src.blurry_classifier_module import BlurryClassifier
 from tests.fake_camera import FakeCamera
 
 import pytest
@@ -21,37 +21,36 @@ config = ServiceConfig(
     ))
 
 def get_vision_service():
-    service = BlurryDetector("test")
+    service = BlurryClassifier("test")
     cam = FakeCamera(CAMERA_NAME)
     camera_name = cam.get_resource_name(CAMERA_NAME)
-    cfg = config
-    service.validate_config(cfg)
-    service.reconfigure(cfg, dependencies={camera_name: cam})
+    service.validate_config(config)
+    service.reconfigure(config, dependencies={camera_name: cam})
     return service
 
-class TestBlurryDetector:
+class TestBlurryClassifier:
     def test_empty(self):
-        blurry_detector = BlurryDetector("test_blurry_detector")
+        blurry_classifier = BlurryClassifier("test_blurry_classifier")
         with pytest.raises(ValueError, match="A camera name is required for face_identification vision service module."):
-            blurry_detector.validate_config(ServiceConfig(attributes=dict_to_struct({})))
+            blurry_classifier.validate_config(ServiceConfig(attributes=dict_to_struct({})))
 
     @pytest.mark.asyncio
-    @patch('viam.components.camera.Camera.get_resource_name', return_value="fake_cam")
+    @patch('viam.components.camera.Camera.get_resource_name', return_value=CAMERA_NAME)
     async def test_reconfigure(self, fake_cam):
-        blurry_detector = get_vision_service()
+        blurry_classifier = get_vision_service()
 
-        assert blurry_detector.camera_name == CAMERA_NAME
-        assert blurry_detector.blurry_threshold == BLURRINESS_THRESHOLD
-        assert blurry_detector.camera is not None
+        assert blurry_classifier.camera_name == CAMERA_NAME
+        assert blurry_classifier.blurry_threshold == BLURRINESS_THRESHOLD
+        assert blurry_classifier.camera is not None
 
     @pytest.mark.asyncio
-    @patch('viam.components.camera.Camera.get_resource_name', return_value="fake_cam")
+    @patch('viam.components.camera.Camera.get_resource_name', return_value=CAMERA_NAME)
     async def test_get_classifications(self, fake_cam):
-        blurry_detector = get_vision_service()
+        blurry_classifier = get_vision_service()
 
         # Test with a blurry image
-        result = await blurry_detector.get_classifications(
-            image= await blurry_detector.camera.get_image(True),
+        result = await blurry_classifier.get_classifications(
+            image= await blurry_classifier.camera.get_image(blurry=True),
             count=1,
         )
 
@@ -59,20 +58,20 @@ class TestBlurryDetector:
         assert result[0].confidence == 0.5
 
         # Test with a non-blurry image
-        result = await blurry_detector.get_classifications(
-            image=await blurry_detector.camera.get_image(blurry=False),
+        result = await blurry_classifier.get_classifications(
+            image=await blurry_classifier.camera.get_image(blurry=False),
             count=1,
         )
 
         assert result == []
 
     @pytest.mark.asyncio
-    @patch('viam.components.camera.Camera.get_resource_name', return_value="fake_cam")
+    @patch('viam.components.camera.Camera.get_resource_name', return_value=CAMERA_NAME)
     async def test_capture_all_from_camera(self, fake_cam):
-        blurry_detector = get_vision_service()
+        blurry_classifier = get_vision_service()
 
         # Test with a blurry image
-        result = await blurry_detector.capture_all_from_camera(
+        result = await blurry_classifier.capture_all_from_camera(
             camera_name=CAMERA_NAME,
             return_image=True,
             return_classifications=True,

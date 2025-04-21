@@ -14,4 +14,4 @@ dist/archive.tar.gz: .installed
 test:
 	PYTHONPATH=./src pytest
 lint:
-	pylint --disable=C0114,C0115,E1101 src/
+	pylint --disable=C0114,C0115 src/

@@ -13,25 +13,27 @@ from viam.resource.easy_resource import EasyResource
 from viam.resource.types import Model, ModelFamily
 from viam.services.vision import Vision, CaptureAllResult
 from viam.utils import ValueTypes
+from viam.logging import getLogger
 
 import cv2 as cv
 
 from src.utils import decode_image
 
+LOGGER = getLogger("BlurryClassifierLogger")
 
-class BlurryDetector(Vision, EasyResource):
+class BlurryClassifier(Vision, EasyResource):
     """
-    BlurryDetector implements a vision service that only supports classifications.
+    BlurryClassifier implements a vision service that only supports classifications.
 
     It inherits from the built-in resource subtype Vision and conforms to the
     ``Reconfigurable`` protocol, which signifies that this component can be
     reconfigured. Additionally, it specifies a constructor function
-    ``BlurryDetector.new`` which confirms to the
+    ``BlurryClassifier.new`` which confirms to the
     ``resource.types.ResourceCreator`` type required for all models.
     """
 
     MODEL: ClassVar[Model] = Model(
-        ModelFamily("viam", "blurry-detector"), "blurry-detector"
+        ModelFamily("viam", "blurry-classifier"), "blurry-classifier"
     )
 
     def __init__(self, name: str):
@@ -116,10 +118,10 @@ class BlurryDetector(Vision, EasyResource):
     ) -> CaptureAllResult:
         if camera_name not in (self.camera_name, ""):
             raise ValueError(
-                "Camera name ",
-                {camera_name},
-                "does not match the camera name ",
-                {self.camera_name},
+                "Camera name " +
+                {camera_name} +
+                "does not match the camera name " +
+                {self.camera_name} +
                 "in the config."
             )
         im = await self.camera.get_image(mime_type=CameraMimeType.JPEG)
@@ -159,10 +161,10 @@ class BlurryDetector(Vision, EasyResource):
     ) -> List[Classification]:
         if camera_name not in (self.camera_name, ""):
             raise ValueError(
-                "Camera name ",
-                {camera_name},
-                "does not match the camera name ",
-                {self.camera_name},
+                "Camera name " +
+                {camera_name} +
+                "does not match the camera name " +
+                {self.camera_name} +
                 "in the config."
             )
         im = await self.camera.get_image(mime_type=CameraMimeType.JPEG)
@@ -177,8 +179,8 @@ class BlurryDetector(Vision, EasyResource):
         timeout: Optional[float] = None,
     ) -> List[Classification]:
         img = decode_image(image)
-        blurriness = cv.Laplacian(img, cv.CV_64F).var()
-        if blurriness < self.blurry_threshold:
+        lapacian_variance = cv.Laplacian(img, cv.CV_64F).var()
+        if lapacian_variance < self.blurry_threshold:
             return [Classification(class_name="blurry", confidence=0.5)]
 
         return []
