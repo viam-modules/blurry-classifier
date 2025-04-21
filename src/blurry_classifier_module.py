@@ -180,11 +180,11 @@ class BlurryClassifier(Vision, EasyResource):
     ) -> List[Classification]:
         img = decode_image(image)
         lapacian_variance = cv.Laplacian(img, cv.CV_64F).var()
+        LOGGER.info(f"Laplacian variance: {lapacian_variance}. Threshold is {self.blurry_threshold}.")
         if lapacian_variance < self.blurry_threshold:
             return [Classification(class_name="blurry", confidence=0.5)]
 
         return []
-
 
     async def get_object_point_clouds(
         self,
@@ -206,7 +206,3 @@ class BlurryClassifier(Vision, EasyResource):
             detections_supported=False,
             object_point_clouds_supported=False,
         )
-
-
-if __name__ == "__main__":
-    asyncio.run(Module.run_from_registry())
