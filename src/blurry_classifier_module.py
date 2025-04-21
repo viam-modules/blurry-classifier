@@ -1,10 +1,8 @@
-import asyncio
 from typing import ClassVar, List, Mapping, Optional, Sequence
 from typing_extensions import Self
 
 from viam.components.camera import Camera
 from viam.media.video import CameraMimeType, ViamImage
-from viam.module.module import Module
 from viam.proto.app.robot import ComponentConfig
 from viam.proto.common import PointCloudObject, ResourceName
 from viam.proto.service.vision import Classification, Detection
@@ -179,13 +177,11 @@ class BlurryClassifier(Vision, EasyResource):
         timeout: Optional[float] = None,
     ) -> List[Classification]:
         img = decode_image(image)
-        lapacian_variance = cv.Laplacian(img, cv.CV_64F).var()
-        LOGGER.info(f"Laplacian variance: {lapacian_variance}. Threshold is {self.blurry_threshold}.")
-        if lapacian_variance < self.blurry_threshold:
-            # use linear interpolation in the range of [0, 2 * blurry_threshold] to map variance to confidence
-            # low variance -> high blurriness
-            confidence = 1 - min(1, lapacian_variance / (2 * self.blurry_threshold))
-            return [Classification(class_name="blurry", confidence=confidence)]
+        laplacian_variance = cv.Laplacian(img, cv.CV_64F).var()
+        LOGGER.info("Laplacian variance: %f. Threshold is %f.",
+                    laplacian_variance, self.blurry_threshold)
+        if laplacian_variance < self.blurry_threshold:
+            return [Classification(class_name="blurry", confidence=1.0)]
 
         return []
 

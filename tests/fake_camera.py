@@ -10,16 +10,16 @@ from viam.proto.common import ResponseMetadata
 
 
 def read_image(name: str):
-    return Image.open(os.path.join("./tests", "img", name + ".jpg"))
+    return Image.open(os.path.join(os.path.dirname(__file__), "img", name + ".jpg"))
 
 
 class FakeCamera(Camera):
-    def __init__(self, name: str):
+    def __init__(self, name: str, blurry: bool = True):
         super().__init__(name=name)
-        self.images = [read_image("blurry"), read_image("not_blurry")]
+        self.image = read_image("blurry" if blurry else "not_blurry")
 
-    async def get_image(self, mime_type: str = "", blurry: bool = True) -> Coroutine[Any, Any, ViamImage]:
-        return pil.pil_to_viam_image(self.images[0 if blurry else 1], CameraMimeType.JPEG)
+    async def get_image(self, mime_type: str = "") -> Coroutine[Any, Any, ViamImage]:
+        return pil.pil_to_viam_image(self.image, CameraMimeType.JPEG)
 
     async def get_images(
         self,

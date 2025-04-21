@@ -39,7 +39,7 @@ def decode_image(image: Union[Image.Image, ViamImage, np.ndarray]) -> np.ndarray
         )
     else:
         pil_image = image
-        
+
     res = pil_image.convert("RGB")
     rgb = np.array(res)
     return rgb

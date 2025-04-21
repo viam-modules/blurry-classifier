@@ -20,9 +20,9 @@ config = ServiceConfig(
         }
     ))
 
-def get_vision_service():
+def get_vision_service(blurry: bool = True) -> BlurryClassifier:
     service = BlurryClassifier("test")
-    cam = FakeCamera(CAMERA_NAME)
+    cam = FakeCamera(CAMERA_NAME, blurry)
     camera_name = cam.get_resource_name(CAMERA_NAME)
     service.validate_config(config)
     service.reconfigure(config, dependencies={camera_name: cam})
@@ -46,20 +46,21 @@ class TestBlurryClassifier:
     @pytest.mark.asyncio
     @patch('viam.components.camera.Camera.get_resource_name', return_value=CAMERA_NAME)
     async def test_get_classifications(self, fake_cam):
-        blurry_classifier = get_vision_service()
+        blurry_classifier = get_vision_service(True)
 
         # Test with a blurry image
         result = await blurry_classifier.get_classifications(
-            image= await blurry_classifier.camera.get_image(blurry=True),
+            image= await blurry_classifier.camera.get_image(),
             count=1,
         )
 
         assert result[0].class_name == "blurry"
-        assert result[0].confidence == 0.5
+        assert result[0].confidence == 1.0
 
+        blurry_classifier = get_vision_service(False)
         # Test with a non-blurry image
         result = await blurry_classifier.get_classifications(
-            image=await blurry_classifier.camera.get_image(blurry=False),
+            image=await blurry_classifier.camera.get_image(),
             count=1,
         )
 
@@ -68,7 +69,7 @@ class TestBlurryClassifier:
     @pytest.mark.asyncio
     @patch('viam.components.camera.Camera.get_resource_name', return_value=CAMERA_NAME)
     async def test_capture_all_from_camera(self, fake_cam):
-        blurry_classifier = get_vision_service()
+        blurry_classifier = get_vision_service(True)
 
         # Test with a blurry image
         result = await blurry_classifier.capture_all_from_camera(
@@ -79,4 +80,4 @@ class TestBlurryClassifier:
 
         assert result.image is not None
         assert result.classifications[0].class_name == "blurry"
-        assert result.classifications[0].confidence == 0.5
+        assert result.classifications[0].confidence == 1.0
