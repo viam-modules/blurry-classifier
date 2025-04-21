@@ -34,11 +34,12 @@ def decode_image(image: Union[Image.Image, ViamImage, np.ndarray]) -> np.ndarray
 
             raise ValueError(f"Unsupported image type: {image.mime_type}.")
 
-        im = Image.open(BytesIO(image.data), formats=LIBRARY_SUPPORTED_FORMATS).convert(
+        pil_image = Image.open(BytesIO(image.data), formats=LIBRARY_SUPPORTED_FORMATS).convert(
             "RGB"
-        )  # convert in RGB png openened in RGBA
-        return np.array(im)
-
-    res = image.convert("RGB")
+        )
+    else:
+        pil_image = image
+        
+    res = pil_image.convert("RGB")
     rgb = np.array(res)
     return rgb

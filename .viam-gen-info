@@ -1,10 +1,10 @@
 {
-  "module_name": "blurry-detector",
+  "module_name": "blurry-classifier",
   "namespace": "viam",
   "language": "python",
   "resource_type": "service",
   "resource_subtype": "vision",
-  "model_name": "blurry-detector",
+  "model_name": "blurry-classifier",
   "enable_cloud_build": true,
   "initialize_git": false,
   "generator_version": "0.1.0",

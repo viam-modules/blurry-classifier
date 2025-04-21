@@ -40,7 +40,7 @@ class BlurryClassifier(Vision, EasyResource):
         super().__init__(name=name)
         self.camera = None
         self.camera_name = None
-        self.blurry_threshold = 1000.0
+        self.blurry_threshold = 100.0
 
     @classmethod
     def new(
@@ -182,7 +182,10 @@ class BlurryClassifier(Vision, EasyResource):
         lapacian_variance = cv.Laplacian(img, cv.CV_64F).var()
         LOGGER.info(f"Laplacian variance: {lapacian_variance}. Threshold is {self.blurry_threshold}.")
         if lapacian_variance < self.blurry_threshold:
-            return [Classification(class_name="blurry", confidence=0.5)]
+            # use linear interpolation in the range of [0, 2 * blurry_threshold] to map variance to confidence
+            # low variance -> high blurriness
+            confidence = 1 - min(1, lapacian_variance / (2 * self.blurry_threshold))
+            return [Classification(class_name="blurry", confidence=confidence)]
 
         return []
 

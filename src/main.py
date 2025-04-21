@@ -13,14 +13,14 @@ async def main():
     resource models. Resource creators must be registered to the resource
     registry before the module adds the resource model.
     """
-    Registry.register_resource_creator(
-        Vision.API,
-        BlurryClassifier.MODEL,
-        ResourceCreatorRegistration(
-            BlurryClassifier.new,
-            BlurryClassifier.validate_config,
-        ),
-    )
+    # Registry.register_resource_creator(
+    #     Vision.API,
+    #     BlurryClassifier.MODEL,
+    #     ResourceCreatorRegistration(
+    #         BlurryClassifier.new,
+    #         BlurryClassifier.validate_config,
+    #     ),
+    # )
     module = Module.from_args()
 
     module.add_model_from_registry(Vision.API, BlurryClassifier.MODEL)
