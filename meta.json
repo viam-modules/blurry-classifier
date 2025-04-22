@@ -2,12 +2,14 @@
   "$schema": "https://dl.viam.dev/module.schema.json",
   "module_id": "viam:blurry-classifier",
   "visibility": "public",
-  "url": "",
+  "url": "https://github.com/viam-modules/blurry-classifier",
   "description": "Modular vision service: blurry-classifier",
   "models": [
     {
       "api": "rdk:service:vision",
-      "model": "viam:blurry-classifier:blurry-classifier"
+      "model": "viam:blurry-classifier:blurry-classifier",
+      "markdown_link": "README.md#example-attributes",
+      "short_description": "A vision service that classifies blurry images."
     }
   ],
   "entrypoint": "dist/main",

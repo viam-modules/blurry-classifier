@@ -33,6 +33,14 @@ The following attributes are available for this model:
 | `camera_name` | string  | Required  | The name of the camera configured on your robot. |
 | `blurry_threshold` | float | Optional  | The threshold _below_ which an image would be considered blurry. High laplacian variance corresponds to low blurriness. |
 
+### Example Attributes
+```json
+{
+"camera_name": "myCam",
+"blurry_threshold": 100.0
+}
+```
+
 #### Example Configuration
 
 ```json
