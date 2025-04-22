@@ -116,11 +116,8 @@ class BlurryClassifier(Vision, EasyResource):
     ) -> CaptureAllResult:
         if camera_name not in (self.camera_name, ""):
             raise ValueError(
-                "Camera name " +
-                {camera_name} +
-                "does not match the camera name " +
-                {self.camera_name} +
-                "in the config."
+                f"Camera name {camera_name} does not match the camera name " +
+                f"{self.camera_name} in the config."
             )
         im = await self.camera.get_image(mime_type=CameraMimeType.JPEG)
         classifications = None
@@ -159,14 +156,11 @@ class BlurryClassifier(Vision, EasyResource):
     ) -> List[Classification]:
         if camera_name not in (self.camera_name, ""):
             raise ValueError(
-                "Camera name " +
-                {camera_name} +
-                "does not match the camera name " +
-                {self.camera_name} +
-                "in the config."
+                f"Camera name {camera_name} does not match the camera name " +
+                f"{self.camera_name} in the config."
             )
         im = await self.camera.get_image(mime_type=CameraMimeType.JPEG)
-        return self.get_classifications(im, 1, extra=extra, timeout=timeout)
+        return await self.get_classifications(im, 1, extra=extra, timeout=timeout)
 
     async def get_classifications(
         self,

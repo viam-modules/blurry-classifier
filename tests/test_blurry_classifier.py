@@ -11,12 +11,11 @@ import pytest
 
 
 CAMERA_NAME = "fake_cam"
-BLURRINESS_THRESHOLD = 300.0
+
 config = ServiceConfig(
     attributes=dict_to_struct(
         {
             "camera_name": CAMERA_NAME,
-            "blurry_threshold": BLURRINESS_THRESHOLD,
         }
     ))
 
@@ -40,7 +39,6 @@ class TestBlurryClassifier:
         blurry_classifier = get_vision_service()
 
         assert blurry_classifier.camera_name == CAMERA_NAME
-        assert blurry_classifier.blurry_threshold == BLURRINESS_THRESHOLD
         assert blurry_classifier.camera is not None
 
     @pytest.mark.asyncio
@@ -81,3 +79,43 @@ class TestBlurryClassifier:
         assert result.image is not None
         assert result.classifications[0].class_name == "blurry"
         assert result.classifications[0].confidence == 1.0
+
+    @pytest.mark.asyncio
+    @patch('viam.components.camera.Camera.get_resource_name', return_value=CAMERA_NAME)
+    async def test_with_default_camera(self, fake_cam):
+        blurry_classifier = get_vision_service(True)
+
+        # Test with empty camera name
+        result = await blurry_classifier.capture_all_from_camera(
+            camera_name="",
+            return_image=True,
+            return_classifications=True,
+        )
+
+        assert result.image is not None
+        assert result.classifications[0].class_name == "blurry"
+        assert result.classifications[0].confidence == 1.0
+
+        result = await blurry_classifier.get_classifications_from_camera(
+            camera_name="",
+            count=1,
+        )
+
+        assert result[0].class_name == "blurry"
+        assert result[0].confidence == 1.0
+
+        # Test with wrong camera name
+        with pytest.raises(ValueError, match="Camera name wrong_camera does not match the camera name fake_cam in the config."):
+            await blurry_classifier.capture_all_from_camera(
+                camera_name="wrong_camera",
+                return_image=True,
+                return_classifications=True,
+            )
+
+        with pytest.raises(ValueError, match="Camera name wrong_camera does not match the camera name fake_cam in the config."):
+            await blurry_classifier.get_classifications_from_camera(
+                camera_name="wrong_camera",
+                count=1,
+            )
+
+

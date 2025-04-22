@@ -3,6 +3,8 @@ cd `dirname $0`
 
 . venv/bin/activate
 
+## using `pyrhon -m PyInastaller` as opposed to `pyinstaller` as the former
+## runs in the venv and the latter does not
 python -m PyInstaller --onefile --hidden-import="googleapiclient" src/main.py
 tar -czvf dist/archive.tar.gz ./dist/main
 # To run locally, we need meta.json in the same directory. So, add to dist/ a
