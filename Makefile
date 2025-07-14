@@ -8,7 +8,7 @@ setup: .installed
 # Rather than working out the right dependencies, just rebuild this every time.
 # If a human is rebuilding it, it's probably because something has changed.
 .PHONY: dist/main
-dist/archive.tar.gz: .installed
+dist/archive.tar.gz: .installed src/*
 	./build.sh
 
 test:
