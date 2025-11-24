@@ -2,7 +2,7 @@ from typing import ClassVar, List, Mapping, Optional, Sequence, Tuple
 from typing_extensions import Self
 
 from viam.components.camera import Camera
-from viam.media.video import CameraMimeType, ViamImage
+from viam.media.video import ViamImage
 from viam.proto.app.robot import ComponentConfig
 from viam.proto.common import PointCloudObject, ResourceName
 from viam.proto.service.vision import Classification, Detection
