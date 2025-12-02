@@ -119,8 +119,8 @@ class BlurryClassifier(Vision, EasyResource):
                 f"Camera name {camera_name} does not match the camera name " +
                 f"{self.camera_name} in the config."
             )
-        imgs = await self.camera.get_images()
-        if len(imgs) == 0:
+        imgs, _ = await self.camera.get_images()
+        if imgs is None or len(imgs) == 0:
             raise ValueError("No images returned by get_images")
         im = imgs[0]
         classifications = None
@@ -162,8 +162,8 @@ class BlurryClassifier(Vision, EasyResource):
                 f"Camera name {camera_name} does not match the camera name " +
                 f"{self.camera_name} in the config."
             )
-        imgs = await self.camera.get_images()
-        if len(imgs) == 0:
+        imgs, _ = await self.camera.get_images()
+        if imgs is None or len(imgs) == 0:
             raise ValueError("No images returned by get_images")
         im = imgs[0]
         return await self.get_classifications(im, 1, extra=extra, timeout=timeout)
