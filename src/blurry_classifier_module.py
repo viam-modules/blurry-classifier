@@ -1,8 +1,8 @@
-from typing import ClassVar, List, Mapping, Optional, Sequence
+from typing import ClassVar, List, Mapping, Optional, Sequence, Tuple
 from typing_extensions import Self
 
 from viam.components.camera import Camera
-from viam.media.video import CameraMimeType, ViamImage
+from viam.media.video import ViamImage
 from viam.proto.app.robot import ComponentConfig
 from viam.proto.common import PointCloudObject, ResourceName
 from viam.proto.service.vision import Classification, Detection
@@ -23,7 +23,7 @@ class BlurryClassifier(Vision, EasyResource):
     """
     BlurryClassifier implements a vision service that only supports classifications.
 
-    It inherits from the built-in resource subtype Vision and conforms to the
+    It inherits from the built-in resource api Vision and conforms to the
     ``Reconfigurable`` protocol, which signifies that this component can be
     reconfigured. Additionally, it specifies a constructor function
     ``BlurryClassifier.new`` which confirms to the
@@ -64,7 +64,7 @@ class BlurryClassifier(Vision, EasyResource):
         return service
 
     @classmethod
-    def validate_config(cls, config: ComponentConfig) -> Sequence[str]:
+    def validate_config(cls, config: ComponentConfig) -> Tuple[Sequence[str], Sequence[str]]:
         """
         This method allows you to validate the configuration object received
         from the machine, as well as to return any implicit dependencies based
@@ -81,7 +81,7 @@ class BlurryClassifier(Vision, EasyResource):
             raise ValueError(
                 "A camera name is required for face_identification vision service module."
             )
-        return [camera_name]
+        return [camera_name], []
 
     def reconfigure(
         self,
@@ -119,7 +119,10 @@ class BlurryClassifier(Vision, EasyResource):
                 f"Camera name {camera_name} does not match the camera name " +
                 f"{self.camera_name} in the config."
             )
-        im = await self.camera.get_image(mime_type=CameraMimeType.JPEG)
+        imgs, _ = await self.camera.get_images()
+        if imgs is None or len(imgs) == 0:
+            raise ValueError("No images returned by get_images")
+        im = imgs[0]
         classifications = None
         if return_classifications:
             classifications = await self.get_classifications(
@@ -159,7 +162,10 @@ class BlurryClassifier(Vision, EasyResource):
                 f"Camera name {camera_name} does not match the camera name " +
                 f"{self.camera_name} in the config."
             )
-        im = await self.camera.get_image(mime_type=CameraMimeType.JPEG)
+        imgs, _ = await self.camera.get_images()
+        if imgs is None or len(imgs) == 0:
+            raise ValueError("No images returned by get_images")
+        im = imgs[0]
         return await self.get_classifications(im, 1, extra=extra, timeout=timeout)
 
     async def get_classifications(

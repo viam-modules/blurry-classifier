@@ -3,7 +3,7 @@
   "namespace": "viam",
   "language": "python",
   "resource_type": "service",
-  "resource_subtype": "vision",
+  "resource_api": "vision",
   "model_name": "blurry-classifier",
   "enable_cloud_build": true,
   "initialize_git": false,

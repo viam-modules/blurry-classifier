@@ -47,8 +47,11 @@ class TestBlurryClassifier:
         blurry_classifier = get_vision_service(True)
 
         # Test with a blurry image
+        images, _ = await blurry_classifier.camera.get_images()
+        image = images[0]
+        print(image)
         result = await blurry_classifier.get_classifications(
-            image= await blurry_classifier.camera.get_image(),
+            image = images[0],
             count=1,
         )
 
@@ -57,8 +60,9 @@ class TestBlurryClassifier:
 
         blurry_classifier = get_vision_service(False)
         # Test with a non-blurry image
+        images, _ =await blurry_classifier.camera.get_images()
         result = await blurry_classifier.get_classifications(
-            image=await blurry_classifier.camera.get_image(),
+            image= images[0],
             count=1,
         )
 
